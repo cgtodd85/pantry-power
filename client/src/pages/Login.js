@@ -23,7 +23,7 @@ function Login() {
               <Form.Text className="text-muted">minimum 3 characters</Form.Text>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-              <Form.Check type="checkbox" label="Check me out" />
+              <Form.Check type="checkbox" label="Check if you are a robot" />
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
