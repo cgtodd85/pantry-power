@@ -1,0 +1,19 @@
+{
+  "name": "pantry-power",
+  "version": "1.0.0",
+  "description": "Recipe finder",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgtodd85/pantry-power.git"
+  },
+  "author": "Connor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cgtodd85/pantry-power/issues"
+  },
+  "homepage": "https://github.com/cgtodd85/pantry-power#readme"
+}
