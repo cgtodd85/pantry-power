@@ -3,7 +3,18 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
-const PORT = process.env.PORT || 9001;
+const PORT = process.env.PORT || 3001;
+
+const MongoDBStore = require("connect-mongodb-session")(session.Store);
+
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI || "mongodb://localhost/pantry-power",
+  collection: "sessions",
+});
+
+store.on("error", function (error) {
+  console.log(error);
+});
 
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "this is a secret",
@@ -13,7 +24,6 @@ const sessionOptions = {
   store,
 };
 
-// Connect to the Mongo DB
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/pantry-power",
   {
@@ -23,11 +33,11 @@ mongoose.connect(
     useFindAndModify: false,
   }
 );
-// Define middleware here
+
 app.use(session(sessionOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Serve up static assets (usually on heroku)
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
