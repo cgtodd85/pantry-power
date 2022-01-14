@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
@@ -21,19 +21,19 @@ const userSchema = new Schema({
   },
 });
 
-// userSchema.pre("save", function (next) {
-//   const user = this;
-//   if (!user.isModified("password")) {
-//     return next();
-//   }
-//   try {
-//     const hashedPassword = await bcrypt.hash(user.password, 10);
-//     user.password = hashedPassword;
-//     next();
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
+userSchema.pre("save", function (next) {
+  const user = this;
+  if (!user.isModified("password")) {
+    return next();
+  }
+  try {
+    const hashedPassword = bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+    next();
+  } catch (err) {
+    return next(err);
+  }
+});
 
 // userSchema.pre("updateOne", function (next) {
 //   const update = this.getUpdate().$set;
@@ -41,7 +41,7 @@ const userSchema = new Schema({
 //     return next();
 //   }
 //   try {
-//     const hashedPassword = await bcrypt.hash(update.password, 10);
+//     const hashedPassword = bcrypt.hash(update.password, 10);
 //     update.password = hashedPassword;
 //     next();
 //   } catch (err) {
@@ -49,9 +49,9 @@ const userSchema = new Schema({
 //   }
 // });
 
-// userSchema.methods.comparePassword = function (pass) {
-//   return bcrypt.compareSync(pass, this.password);
-// };
+userSchema.methods.comparePassword = function (pass) {
+  return bcrypt.compareSync(pass, this.password);
+};
 
 const User = mongoose.model("User", userSchema);
 

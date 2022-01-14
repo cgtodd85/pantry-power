@@ -1,30 +1,30 @@
 const express = require("express");
-// const session = require("express-session");
+const session = require("express-session");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// const MongoDBStore = require("connect-mongodb-session")(session.Store);
+const MongoDBStore = require("connect-mongodb-session")(session);
 
-// const store = new MongoDBStore({
-//   uri: process.env.MONGODB_URI || "mongodb://localhost/pantry-power",
-//   collection: "sessions",
-// });
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI || "mongodb://localhost/pantry-power",
+  collection: "sessions",
+});
 
-// store.on("error", function (error) {
-//   console.log(error);
-// });
+store.on("error", function (error) {
+  console.log(error);
+});
 
-// const sessionOptions = {
-//   secret: process.env.SESSION_SECRET || "this is a secret",
-//   cookie: {},
-//   resave: false,
-//   saveUnitialized: true,
-//   store,
-// };
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET || "this is a secret",
+  cookie: {},
+  resave: false,
+  saveUnitialized: true,
+  store,
+};
 
-// app.use(session(sessionOptions));
+app.use(session(sessionOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -38,7 +38,7 @@ app.use(routes);
 mongoose.connect(
   process.env.MONGODB_URI || "mongodb://localhost/pantry-power",
   {
-    // useNewUrlParser: true,
+    useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false,
