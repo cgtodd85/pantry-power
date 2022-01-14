@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -17,6 +17,7 @@ function Login() {
 
   function handleFormSubmit(event) {
     event.preventDefault();
+    console.log(formObject);
     if (formObject.username && formObject.password) {
       API.saveUser({
         username: formObject.username,
@@ -57,12 +58,7 @@ function Login() {
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Check if you are a robot" />
             </Form.Group>
-            <Button
-              disabled={!(formObject.author && formObject.title)}
-              onClick={handleFormSubmit}
-              variant="primary"
-              type="submit"
-            >
+            <Button onClick={handleFormSubmit} variant="primary" type="submit">
               Submit
             </Button>
           </Form>
