@@ -1,59 +1,52 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const { Schema } = mongoose;
-const bcrypt = require("bcrypt");
 
-const Schema = mongoose.Schema;
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    pic: {
+      type: String,
+      required: true,
+      default:
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const userSchema = new Schema({});
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-// username: {
-//     type: String,
-//     trim: true,
-//     required: "Username is required",
-//   },
-//   password: {
-//     type: String,
-//     trim: true,
-//     required: "password is required!",
-//     validate: [({ length }) => length >= 4, "Password should be longer"],
-//   },
-//   userCreated: {
-//     type: Date,
-//     default: Date.now,
-//   },
-// });
-
-// userSchema.pre("save", function (next) {
-//   const user = this;
-//   if (!user.isModified("password")) {
-//     return next();
-//   }
-//   try {
-//     const hashedPassword = bcrypt.hash(user.password, 10);
-//     user.password = hashedPassword;
-//     next();
-//   } catch (err) {
-//     return next(err);
-//   }
-
-// userSchema.pre("updateOne", function (next) {
-//   const update = this.getUpdate().$set;
-//   if (!update.password) {
-//     return next();
-//   }
-//   try {
-//     const hashedPassword = bcrypt.hash(update.password, 10);
-//     update.password = hashedPassword;
-//     next();
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
-
-// userSchema.methods.comparePassword = function (pass) {
-//   return bcrypt.compareSync(pass, this.password);
-// };
+// will encrypt password everytime its saved
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 const User = mongoose.model("User", userSchema);
 
-export default User;
+module.exports = User;
